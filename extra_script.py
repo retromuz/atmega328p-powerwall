@@ -1,0 +1,8 @@
+Import('env')
+# env.Replace(FUSESCMD="avrdude -B 1 $UPLOADERFLAGS -e -U lfuse:w:0xe2:m -U hfuse:w:0xd9:m -U efuse:w:0xfe:m")
+print("======================================================\n")
+print("\n")
+env["UPLOADERFLAGS"].insert(0, "-B 1")
+print(env["UPLOADERFLAGS"])
+print("\n")
+print("======================================================\n")
