@@ -3,14 +3,13 @@
 
 #include "main.h"
 
-int max_pwm = 150;
+int max_pwm = 158;
 int min_pwm = -1;
 volatile int pwm = -1;
-//bool direction = 1;
 int a3 = 0;
 int a2 = 0;
 int targetOutput = 727; // relates to around 59V
-int targetInput = 340; // relates to 36V
+int targetInput = 358; // 321:34V, 340:36V, 360:38V, 378:40V
 int loops = 0;
 
 
@@ -42,7 +41,7 @@ void loop() {
 	}
 
 	if (loops % 100 == 0) {
-		Serial.printf("%d: %d\r\n", a3, pwm);
+		Serial.printf("A2:%d, A3:%d, PWM:%d\r\n", a2, a3, pwm);
 	}
 	loops++;
 }

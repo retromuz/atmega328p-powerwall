@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include <Arduino.h>
 
-#define F_CPU  8000000L
+#define F_CPU  16000000L
 
 //end of add your includes here
 #ifdef __cplusplus
