@@ -2,8 +2,7 @@
 
 This project is intended to be used with below two projects.
 1. https://github.com/retromuz/esp32-bms-monitor.git
-https://github.com/retromuz/esp8266-powerwall.git
-2. 
+2. https://github.com/retromuz/esp8266-powerwall.git
 
 This is the brain behind the DC to DC boost converter that charges 14S Li-Ion battery system. Acts as an I²C slave for ESP8266 master. ESP8266 manages the MPPT function with data provided by ESP32 connected to BMS.
 
