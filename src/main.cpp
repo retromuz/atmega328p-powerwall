@@ -130,7 +130,7 @@ void decPWM() {
 void setPWM() {
 	if (pwm >= min_pwm && pwm <= max_pwm) {
 		if (pwm == -1) {
-			DDRD &= ~(1 << PD3);
+			DDRD &= ~(1 << PD3); // turn off output to set 0 duty cycle
 		} else {
 			DDRD |= (1 << PD3);
 			OCR2B = pwm;
