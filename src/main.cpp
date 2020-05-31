@@ -33,7 +33,6 @@ void setup() {
 }
 
 void loop() {
-	_delay_ms(10);
 	a3 = precisionAnalogRead(A3);
 	a2 = precisionAnalogRead(A2);
 	if (a2 < 142) {
