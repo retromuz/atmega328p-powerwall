@@ -6,7 +6,8 @@
 int max_pwm = 60;
 int min_pwm = -1;
 volatile int pwm = -1;
-volatile int targetInput = 540; // 38.8125V
+volatile int targetInput = 556; // 40V
+//volatile int targetInput = 140; // 10V
 volatile int targetOutput = 560; // 59.2V
 
 volatile byte requestedAddr = 255;
