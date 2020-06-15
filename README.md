@@ -13,6 +13,7 @@ UPDATE - 2020-05-25
 ![Schematics](https://raw.githubusercontent.com/retromuz/atmega328p-powerwall/7b1da86ed17c68ca28ebdc94d98746e19b0f332b/schematics/Schematic_PowerWall_2020-05-25_04-13-56.svg)
 
 ![Powerwall - Web UI - Discharging](https://github.com/retromuz/atmega328p-powerwall/blob/master/photos/powerwall-web-ui-discharging.png?raw=true)
+![Modding eBay 1500W boost converter - PCB Done](https://github.com/retromuz/atmega328p-powerwall/blob/master/photos/mod-boost-converter-pcb.png?raw=true)
 ![Modding eBay 1500W boost converter - ATMEGA328P (I²C slave) shown with optocoupler and regulators](https://github.com/retromuz/atmega328p-powerwall/blob/master/photos/mod-boost-converter-atmega328p-shown.png?raw=true)
 ![Modding eBay 1500W boost converter - ESP8266 I²C master](https://github.com/retromuz/atmega328p-powerwall/blob/master/photos/mod-boost-converter-esp8266-shown.png?raw=true)
 ![Modding eBay 1500W boost converter - Calibrating before Deployment](https://github.com/retromuz/atmega328p-powerwall/blob/master/photos/mod-boost-converter-output-voltage-calibration.png?raw=true)
