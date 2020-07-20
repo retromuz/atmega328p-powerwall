@@ -23,16 +23,18 @@
 #define I2C_ADDR_READ_INPUT_ADC_VAL 2
 #define I2C_ADDR_READ_OUTPUT_ADC_VAL 3
 #define I2C_ADDR_READ_PWM_VAL 6
-#define I2C_ADDR_WRITE_FREQ 7
 #define I2C_ADDR_READ_FREQ 8
+#define I2C_ADDR_READ_OUTPUT_CURRENT_ADC_VAL 10
 
 #define MIN_TARGET_INPUT 140
-#define MAX_TARGET_INPUT 560
+#define MAX_TARGET_INPUT 600
 
 #define MIN_TARGET_OUTPUT 200
 #define MAX_TARGET_OUTPUT 900
 
-#define PRECISION_ANALOG_READ_COUNT 4
+#define PRECISION_ANALOG_READ_COUNT 40
+
+#define TIMSK     _SFR_IO8(0x37)
 
 //end of add your includes here
 #ifdef __cplusplus
@@ -47,6 +49,7 @@ void setPWM();
 void i2cReceive(int k);
 void i2cSend();
 int precisionAnalogRead(uint8_t PORT);
+void resetESP8266();
 
 #ifdef __cplusplus
 } // extern "C"
