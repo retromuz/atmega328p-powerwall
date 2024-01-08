@@ -20,12 +20,8 @@ volatile unsigned int espRstLoops = 0;
 volatile byte espResetting = 0;
 
 volatile bool stopCharging = false;
-volatile bool mppt = true;
-volatile bool initMppt = true;
-MPPTData mpptData;
 
 void setup() {
-//	Serial.begin(115200);
 	DDRC &= (1 << PC3); // ADC3 as input (output voltage measurement)
 	DDRC &= (1 << PC2); // ADC2 as input (input voltage measurement)
 	DDRC &= (1 << PC1); // ADC2 as input (output current sense)
@@ -46,7 +42,6 @@ void setup() {
 	Wire.begin(I2C_ADDR);
 	Wire.onReceive(i2cReceive);
 	Wire.onRequest(i2cSend);
-	mpptData.status = 0;
 }
 
 void loop() {
@@ -60,7 +55,7 @@ void loop() {
 			* ((58.8 * a3) / 420)); // mW
 	input_current = output_power / (a2 * 40 / 560); // mA
 
-	// cater for output sense voltage drift due to charge current
+	// TODO: Output and input voltage drift compensation due to the resistance of the conductors
 
 	if (stopCharging) {
 		targetInput = MAX_TARGET_INPUT;
@@ -84,8 +79,6 @@ void loop() {
 	if (stopCharging && (a3 < CHARGE_RESTART_VOLTAGE_ADC)) {
 		stopCharging = false;
 		targetInput = TARGET_INPUT;
-		initMppt = true;
-		mppt = true;
 	}
 
 	PORTB &= ~(1 << PB0);
@@ -100,57 +93,8 @@ void loop() {
 		resetESP8266();
 	}
 
-	if (!mppt && loops % (LOOPS_PER_SECOND * 60 * 10) == 0) {
-		mppt = true;
-	}
-
-	if (mppt) {
-		mpptScan(initMppt ? 100 : 20);
-	}
-
 	loops++;
 	espRstLoops++;
-}
-
-void mpptScan(unsigned int statusesToCapture) {
-	if (mpptData.status == statusesToCapture) {
-		mpptData.status = 0;
-		mpptAnalyze(statusesToCapture);
-	} else if (loops % 10 == 0) {
-		if (mpptData.status == 0 && statusesToCapture == 20) {
-			unsigned int targetIn = targetInput + (MPPT_STEP * 10);
-			if (targetIn >= MIN_TARGET_INPUT && targetIn <= MAX_TARGET_INPUT) {
-				targetInput = targetIn;
-			}
-		}
-		MPPTEntry entry;
-		entry.inAdc = targetInput;
-		entry.current = a1;
-		mpptData.data[mpptData.status] = entry;
-		mpptData.status++;
-		unsigned int targetIn = targetInput - MPPT_STEP;
-		if (targetIn >= MIN_TARGET_INPUT && targetIn <= MAX_TARGET_INPUT) {
-			targetInput = targetIn;
-		}
-	}
-}
-
-void mpptAnalyze(unsigned int statusesToCapture) {
-	unsigned int max_current = 0;
-	unsigned int max_yield_inAdc = 0;
-	for (unsigned int x = 0; x < statusesToCapture; x++) {
-		MPPTEntry entry = mpptData.data[x];
-		if (entry.current >= max_current) {
-			max_current = entry.current;
-			max_yield_inAdc = entry.inAdc;
-		}
-	}
-	if (max_yield_inAdc >= MIN_TARGET_INPUT
-			&& max_yield_inAdc <= MAX_TARGET_INPUT) {
-		targetInput = max_yield_inAdc;
-	}
-	mppt = false;
-	initMppt = false;
 }
 
 void resetESP8266() {
@@ -232,7 +176,7 @@ void i2cSend() {
 		arr[2] = (input_current & 0xff0000) >> 16;
 		Wire.write(arr, 3);
 	} else if (I2C_ADDR_READ_MPPT_STATUS == requestedAddr) {
-		Wire.write(mppt ? 1 : 0);
+		Wire.write(0);
 	} else if (I2C_ADDR_READ_PWM_VAL == requestedAddr) {
 		Wire.write(pwm);
 	} else if (I2C_ADDR_READ_FREQ == requestedAddr) {

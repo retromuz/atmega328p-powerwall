@@ -31,14 +31,14 @@
 #define I2C_ADDR_READ_MPPT_STATUS 13
 #define I2C_ADDR_DEFAULT 0xff
 
-#define MIN_TARGET_INPUT 419 // 30V
-#define MAX_TARGET_INPUT 700 // 50V
+#define MIN_TARGET_INPUT 480 // 34.37V
+#define MAX_TARGET_INPUT 560 // 42.95V
 #define MAX_INPUT_CURRENT 30000 // 30A
 #define MAX_OUTPUT_CURRENT_AT_SATURATION 5000 // 5A
 #define CHAGE_STOP_CURRENT_ADC 1000 / 30 // 1000mA
-#define CHARGE_STOP_VOLTAGE_ADC 416 // 58.2V (4.15V / cell)
-#define CHARGE_RESTART_VOLTAGE_ADC 410 // 56.9V (4.065V / cell)
-#define TARGET_INPUT 670 // 47.89V
+#define CHARGE_STOP_VOLTAGE_ADC 420 // 58.8V (4.2V / cell)
+#define CHARGE_RESTART_VOLTAGE_ADC 400 // 56.0V (4.0V / cell)
+#define TARGET_INPUT 560 // 42.95V
 
 #define OUTPUT_CURRENT_ADC_TO_MA_RATIO 30
 
@@ -49,11 +49,10 @@
 #define MAX_PWM 56 // 90% duty
 #define MIN_PWM -1
 
-#define MPPT_STEP 4
 
 #define PRECISION_ANALOG_READ_COUNT 40
 #define LOOPS_PER_SECOND 400
-#define ESP_RESET_LOOPS_COUNT_THRESHOLD 2000
+#define ESP_RESET_LOOPS_COUNT_THRESHOLD 20000
 
 #define TIMSK     _SFR_IO8(0x37)
 
@@ -61,16 +60,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-typedef struct {
-	unsigned int inAdc;
-	unsigned int current;
-} MPPTEntry;
-
-typedef struct {
-	MPPTEntry data[100];
-	unsigned int status;
-} MPPTData;
 
 void setup();
 void loop();
@@ -81,8 +70,6 @@ void i2cReceive(int k);
 void i2cSend();
 int precisionAnalogRead(uint8_t PORT);
 void resetESP8266();
-void mpptScan(unsigned int statusesToCapture);
-void mpptAnalyze(unsigned int statusesToCapture);
 
 #ifdef __cplusplus
 } // extern "C"
