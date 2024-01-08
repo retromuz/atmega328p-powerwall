@@ -16,6 +16,7 @@
 #define F_CPU  8000000L
 
 #define I2C_ADDR 0b00100010
+#define I2C_CLOCK 100000
 #define I2C_ADDR_WRITE_TARGET_INPUT_ADC_VAL 0
 #define I2C_ADDR_WRITE_TARGET_OUTPUT_ADC_VAL 4
 #define I2C_ADDR_READ_TARGET_INPUT_ADC_VAL 1
@@ -25,14 +26,34 @@
 #define I2C_ADDR_READ_PWM_VAL 6
 #define I2C_ADDR_READ_FREQ 8
 #define I2C_ADDR_READ_OUTPUT_CURRENT_ADC_VAL 10
+#define I2C_ADDR_READ_INPUT_CURRENT_ESTIMATE 11
+#define I2C_ADDR_READ_OUTPUT_CURRENT_ESTIMATE 12
+#define I2C_ADDR_READ_MPPT_STATUS 13
+#define I2C_ADDR_DEFAULT 0xff
 
-#define MIN_TARGET_INPUT 140
-#define MAX_TARGET_INPUT 600
+#define MIN_TARGET_INPUT 419 // 30V
+#define MAX_TARGET_INPUT 700 // 50V
+#define MAX_INPUT_CURRENT 30000 // 30A
+#define MAX_OUTPUT_CURRENT_AT_SATURATION 5000 // 5A
+#define CHAGE_STOP_CURRENT_ADC 1000 / 30 // 1000mA
+#define CHARGE_STOP_VOLTAGE_ADC 416 // 58.2V (4.15V / cell)
+#define CHARGE_RESTART_VOLTAGE_ADC 410 // 56.9V (4.065V / cell)
+#define TARGET_INPUT 670 // 47.89V
+
+#define OUTPUT_CURRENT_ADC_TO_MA_RATIO 30
 
 #define MIN_TARGET_OUTPUT 200
 #define MAX_TARGET_OUTPUT 900
 
+#define TIMER_COUNTER_TOP 63 // 8MHz / 64 -> 125kHz PWM frequency
+#define MAX_PWM 56 // 90% duty
+#define MIN_PWM -1
+
+#define MPPT_STEP 4
+
 #define PRECISION_ANALOG_READ_COUNT 40
+#define LOOPS_PER_SECOND 400
+#define ESP_RESET_LOOPS_COUNT_THRESHOLD 2000
 
 #define TIMSK     _SFR_IO8(0x37)
 
@@ -40,6 +61,16 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+typedef struct {
+	unsigned int inAdc;
+	unsigned int current;
+} MPPTEntry;
+
+typedef struct {
+	MPPTEntry data[100];
+	unsigned int status;
+} MPPTData;
 
 void setup();
 void loop();
@@ -50,6 +81,8 @@ void i2cReceive(int k);
 void i2cSend();
 int precisionAnalogRead(uint8_t PORT);
 void resetESP8266();
+void mpptScan(unsigned int statusesToCapture);
+void mpptAnalyze(unsigned int statusesToCapture);
 
 #ifdef __cplusplus
 } // extern "C"
